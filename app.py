@@ -12,6 +12,7 @@ import model
 import json
 import csv
 import hashlib
+import os
 
 '''
  If web.config.debug is not explicitly set to False, sessions with not work.
@@ -74,6 +75,10 @@ urls = (
     # This API endpoint is for either GET-ting all datapoints, or POST-ing a new
     # datapoint only.
     '/datapoints/',                     'Datapoints',
+
+    # This API endpoint is for devices authenticating in order to get a session
+    # token that they then use to send data to the /datapoints/ endpoint
+    '/auth/',                           'Auth',
 )
 
 '''
@@ -180,6 +185,23 @@ class AllUsers:
             web.header("Cache-Control", "no-cache")
             return json.dumps(data)
 
+class Auth:
+    def POST(self):
+        data = json.loads(web.data())
+        pass_sha256 = hashlib.md5(data.password).hexdigest()
+        match = model.check_device_auth_values(data.username, data.password, data.macaddr)
+        if match:
+            return_data = []
+            return_data.append({
+                "session_token": hashlib.md5(os.urandom(256)).hexdigest()
+            })
+            session_created = model.set_device_session(return_data.session_token, data.macaddr)
+            if session_created:
+                web.header("Content-Type", "application/json")
+                web.header("Cache-Control", "no-cache")
+                return json.dumps(return_data)
+
+
 class Login:
     def POST(self):
         data = web.input(user="",passwd="")
@@ -216,6 +238,7 @@ class Logout:
 class Nodes:
     def PUT(self):
         data = json.loads(web.data())
+        data['password'] = hashlib.md5(data['password']).hexdigest()
         new_id = model.new_node(data)
         data = [{
             "macaddr": data['macaddr'],

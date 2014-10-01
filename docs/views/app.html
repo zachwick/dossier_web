@@ -470,7 +470,9 @@ collection. We do this by calling AppView.addOneSite for each model.</p>
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node({
 			well_id: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">"input[name='well_id']"</span>).val(),
 			macaddr: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">"input[name='macaddr']"</span>).val(),
-			site_id: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">"select[name='site_id']"</span>).val()
+			site_id: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">"select[name='site_id']"</span>).val(),
+			username: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">".node-username"</span>).val(),
+			password: <span class="hljs-keyword">this</span>.$(<span class="hljs-string">".node-password"</span>).val()
 		});
 		newNode.save();
 		<span class="hljs-keyword">this</span>.closeModal();

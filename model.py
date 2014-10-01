@@ -1,6 +1,6 @@
 import web
 
-db = web.database (dbn="mysql", db="dossier", user="root", passwd="")
+db = web.database (dbn="mysql", db="dossier", user="root", passwd="Fritz")
 
 ### Site DB/Table Methods
 
@@ -42,6 +42,8 @@ def new_node(data):
                        well_id=data['well_id'],
                        lat=data['lat'],
                        lon=data['lon'],
+                       username=data['username'],
+                       password=data['password'],
                        site_id=data['site_id'])
     return new_id
 
@@ -94,6 +96,21 @@ def new_datapoint(data):
                         timestamp=timestamp)
 
     return new_id
+
+### Device Auth DB/Table Methods
+def check_device_auth_values(user, passwd, macaddr):
+    nodes = db.select("Node", where="macaddr=$macaddr AND username=$user AND password=$passwd",vars=locals())
+    if len(nodes) > 0:
+        return True
+    else:
+        return False
+
+def set_device_session(token, macaddr):
+    nodes = db.update("Node", where="macaddr=$macaddr", session = token, vars=locals())
+    if len(nodes) == 1:
+        return True
+    else:
+        return False
 
 ### User DB/Table Methods
 

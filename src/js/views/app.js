@@ -152,7 +152,9 @@ var AppView = Backbone.View.extend({
 		var newNode = new Node({
 			well_id: this.$("input[name='well_id']").val(),
 			macaddr: this.$("input[name='macaddr']").val(),
-			site_id: this.$("select[name='site_id']").val()
+			site_id: this.$("select[name='site_id']").val(),
+			username: this.$(".node-username").val(),
+			password: this.$(".node-password").val()
 		});
 		newNode.save();
 		this.closeModal();
