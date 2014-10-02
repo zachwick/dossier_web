@@ -190,13 +190,13 @@ class Auth:
     def POST(self):
         data = json.loads(web.data())
         pass_hash = hashlib.md5(data['password']).hexdigest()
-        match = model.check_device_auth_values(data.username, pass_hash, data.macaddr)
+        match = model.check_device_auth_values(data['username'], pass_hash, data['macaddr'])
         if match:
             return_data = []
             return_data.append({
                 "session_token": hashlib.md5(os.urandom(256)).hexdigest()
             })
-            session_created = model.set_device_session(return_data.session_token, data.macaddr)
+            session_created = model.set_device_session(return_data.session_token, data['macaddr'])
             if session_created:
                 web.header("Content-Type", "application/json")
                 web.header("Cache-Control", "no-cache")
