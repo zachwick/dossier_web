@@ -196,7 +196,7 @@ class Auth:
             return_data.append({
                 "session_token": hashlib.md5(os.urandom(256)).hexdigest()
             })
-            session_created = model.set_device_session(return_data['session_token'], data['macaddr'])
+            session_created = model.set_device_session(return_data[0]['session_token'], data['macaddr'])
             if session_created:
                 web.header("Content-Type", "application/json")
                 web.header("Cache-Control", "no-cache")
