@@ -79,6 +79,7 @@ urls = (
     # This API endpoint is for devices authenticating in order to get a session
     # token that they then use to send data to the /datapoints/ endpoint
     '/auth/',                           'Auth',
+    '/auth',                            'Auth',
 )
 
 '''
@@ -188,8 +189,8 @@ class AllUsers:
 class Auth:
     def POST(self):
         data = json.loads(web.data())
-        pass_sha256 = hashlib.md5(data.password).hexdigest()
-        match = model.check_device_auth_values(data.username, data.password, data.macaddr)
+        pass_hash = hashlib.md5(data['password']).hexdigest()
+        match = model.check_device_auth_values(data.username, pass_hash, data.macaddr)
         if match:
             return_data = []
             return_data.append({
