@@ -107,7 +107,7 @@ def check_device_auth_values(user, passwd, macaddr):
 
 def set_device_session(token, macaddr):
     nodes = db.update("Node", where="macaddr=$macaddr", session = token, vars=locals())
-    if len(nodes) == 1:
+    if nodes == 1:
         return True
     else:
         return False
